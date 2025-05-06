@@ -20,7 +20,7 @@ def print_cars():
                 time.sleep(0.15)
             print_cars()
         else:
-            print(f"No cars found in the database with engine {engine}")
+            print(f"No cars found in the database {DATABASE} with engine {engine}")
             print_cars()
 if __name__ == "__main__":
     print_cars()
