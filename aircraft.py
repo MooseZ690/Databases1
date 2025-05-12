@@ -17,16 +17,17 @@ def print_aircraft():
         cursor.execute(sql)
         aircrafts = cursor.fetchall()
 
-        for aircraft in aircrafts:
-            print(f"Aircraft Name: {aircraft[0]}")
-            print(f"Top Speed (km/h): {aircraft[1]}")
-            print(f"G Limit: {aircraft[2]}")
-            print(f"Payload (lbs): {aircraft[3]}")
-            print(f"Climb Rate (fpm): {aircraft[4]}")
-            print(f"Manufacturer: {aircraft[5]}")
-            print("-" * 40)
-            print_aircraft()
-        if not aircrafts:
+        if aircrafts:
+            for aircraft in aircrafts:
+                print(f"Aircraft Name: {aircraft[0]}")
+                print(f"Top Speed (km/h): {aircraft[1]}")
+                print(f"G Limit: {aircraft[2]}")
+                print(f"Payload (lbs): {aircraft[3]}")
+                print(f"Climb Rate (fpm): {aircraft[4]}")
+                print(f"Manufacturer: {aircraft[5]}")
+                print("-" * 40)
+                print_aircraft()
+        else:
             print("No relevant aircraft found in the database.")
             print("-" * 40)
             print_aircraft()
