@@ -2,6 +2,14 @@ import sqlite3
 
 DATABASE = 'aircraft.db'
 
+def get_countries():
+    with sqlite3.connect(DATABASE) as db:
+        cursor = db.cursor()
+        sql = "SELECT country_id, country_name FROM country"
+        cursor.execute(sql)
+        countries = cursor.fetchall()
+        return countries
+
 def print_aircraft():
     with sqlite3.connect(DATABASE) as db:
         cursor = db.cursor()
@@ -12,10 +20,11 @@ def print_aircraft():
         FROM aircraft
         INNER JOIN country ON aircraft.country = country.country_id 
         INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
-        WHERE country.country_id = 1
         """
         cursor.execute(sql)
         aircrafts = cursor.fetchall()
+
+def main():
 
         if aircrafts:
             for aircraft in aircrafts:
@@ -26,11 +35,9 @@ def print_aircraft():
                 print(f"Climb Rate (fpm): {aircraft[4]}")
                 print(f"Manufacturer: {aircraft[5]}")
                 print("-" * 40)
-                print_aircraft()
         else:
             print("No relevant aircraft found in the database.")
             print("-" * 40)
-            print_aircraft()
 
 if __name__ == "__main__":
     print_aircraft()
