@@ -12,12 +12,24 @@ def print_aircraft():
         FROM aircraft
         INNER JOIN country ON aircraft.country = country.country_id 
         INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
+        WHERE country.country_id = 1
         """
         cursor.execute(sql)
         aircrafts = cursor.fetchall()
 
         for aircraft in aircrafts:
-            print(aircraft)
+            print(f"Aircraft Name: {aircraft[0]}")
+            print(f"Top Speed (km/h): {aircraft[1]}")
+            print(f"G Limit: {aircraft[2]}")
+            print(f"Payload (lbs): {aircraft[3]}")
+            print(f"Climb Rate (fpm): {aircraft[4]}")
+            print(f"Manufacturer: {aircraft[5]}")
+            print("-" * 40)
+            print_aircraft()
+        if not aircrafts:
+            print("No relevant aircraft found in the database.")
+            print("-" * 40)
+            print_aircraft()
 
 if __name__ == "__main__":
     print_aircraft()
