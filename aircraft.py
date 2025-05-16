@@ -1,9 +1,14 @@
 import tkinter as tk #imports the module for creating windows
 import sqlite3
-from tkinter import messagebox
 
 sql = ''  #initialize the sql variable
 DATABASE = "aircraft.db"
+BASE_SELECT = """
+    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name
+    FROM aircraft
+    INNER JOIN country ON aircraft.country = country.country_id
+    INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
+""" #base select statement - joins the foregin keys so i dont have to do it every funcition
 
 def fetch_and_print(sql):
     global results
@@ -30,16 +35,10 @@ def print_by_climb_rate():
     fetch_and_print(sql)
 
 
-BASE_SELECT = """
-    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name
-    FROM aircraft
-    INNER JOIN country ON aircraft.country = country.country_id
-    INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
-"""
-
-root = tk.Tk()
-root.title("Aircraft Database")
-root.geometry("800x600")
+root = tk.Tk() #creates a window called root
+root.configure(bg="gray") #sets the background color of the window
+root.title("Aircraft Database") #names the window
+root.geometry("668x600") #makes the window 668x600, just enough to fit the text box
 
 
 speedbutton = tk.Button(root, text="Sort by Speed", command=print_by_speed) #creates a button in root that runs the print_by_speed. 
@@ -54,6 +53,8 @@ payloadbutton.grid(row=0, column=2, padx=10, pady=10)
 climbbutton = tk.Button(root, text="Sort by Climb Rate", command=print_by_climb_rate) #creates a button in root that runs the print_by_climb_rate.
 climbbutton.grid(row=0, column=3, padx=10, pady=10)
 
-output_text = tk.Message()
+output_text = tk.Text(root)
+output_text.grid(row=1, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+#i cant use pack because you cant have grid and pack in the same window
 
 root.mainloop()
