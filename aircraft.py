@@ -6,10 +6,11 @@ sql = ''  #initialize the sql variable
 DATABASE = "aircraft.db"
 
 def fetch_and_print(sql):
-    with sqlite3.connect(DATABASE) as db:
-        cursor = db.cursor()
-        results = cursor.execute(sql)
-    return results
+    global results
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    cursor.execute(sql)
+    results = cursor.fetchall()
 
 def print_by_speed():
     global sql
@@ -39,24 +40,20 @@ BASE_SELECT = """
 root = tk.Tk()
 root.title("Aircraft Database")
 root.geometry("800x600")
-root.resizable(False, False)
-
-frame = tk.Frame(root)
-frame.pack(padx=10, pady=10)
 
 
-speedbutton = tk.Button(root, text="Sort by Speed", command=print_by_speed)
+speedbutton = tk.Button(root, text="Sort by Speed", command=print_by_speed) #creates a button in root that runs the print_by_speed. 
+speedbutton.grid(row=0, column=0, padx=10, pady=10)
 
+gbutton = tk.Button(root, text="Sort by G Limit", command=print_by_g_limit) #creates a button in root that runs the print_by_g_limit.
+gbutton.grid(row=0, column=1, padx=10, pady=10)
 
-gbutton = tk.Button(root, text="Sort by G Limit", command=print_by_g_limit)
+payloadbutton = tk.Button(root, text="Sort by Payload", command=print_by_payload) #creates a button in root that runs the print_by_payload.
+payloadbutton.grid(row=0, column=2, padx=10, pady=10)
 
+climbbutton = tk.Button(root, text="Sort by Climb Rate", command=print_by_climb_rate) #creates a button in root that runs the print_by_climb_rate.
+climbbutton.grid(row=0, column=3, padx=10, pady=10)
 
-payloadbutton = tk.Button(root, text="Sort by Payload", command=print_by_payload)
-
-
-climbbutton = tk.Button(root, text="Sort by Climb Rate", command=print_by_climb_rate)
-
-
-
+output_text = tk.Message()
 
 root.mainloop()
