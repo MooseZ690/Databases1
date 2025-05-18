@@ -57,4 +57,10 @@ output_text = tk.Text(root)
 output_text.grid(row=1, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 #i cant use pack because you cant have grid and pack in the same window
 
+output_text.delete("1.0", tk.END) #idk why but apparently i need to do this to clear preivious responses
+
+if results:
+    for row in results: #results is a list of tuples, which are like lists but unchangeable
+        output_text.insert(tk.END, f"Aircraft Name: {row[0]}\n") #inserts the first element of the tuple into the text box
+
 root.mainloop()
