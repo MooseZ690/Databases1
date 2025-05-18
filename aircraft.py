@@ -21,7 +21,7 @@ def fetch_and_print(sql):
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     for skibidi in results: #results is a list of tuples, which are like lists but unchangeable
         
-        output_text.insert(tk.END, f"[{aircraftnumber}] Aircraft Name: {skibidi[0]}\n")
+        output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n")
         output_text.insert(tk.END, f"Top speed: {skibidi[1]}km/h\n")
         output_text.insert(tk.END, f"G Limit: {skibidi[2]}\n")
         output_text.insert(tk.END, f"Payload: {skibidi[3]}lbs\n")
