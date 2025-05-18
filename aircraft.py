@@ -3,6 +3,7 @@ import sqlite3
 
 sql = ''  #initialize the sql variable
 DATABASE = "aircraft.db"
+results = []  #initialize the results variable
 BASE_SELECT = """
     SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name
     FROM aircraft
@@ -16,6 +17,8 @@ def fetch_and_print(sql):
     cursor = db.cursor()
     cursor.execute(sql)
     results = cursor.fetchall()
+    for row in results: #results is a list of tuples, which are like lists but unchangeable
+        output_text.insert(tk.END, f"Aircraft Name: {row[0]}\n") #inserts the first element of the tuple into the text box
 
 def print_by_speed():
     global sql
@@ -55,12 +58,9 @@ climbbutton.grid(row=0, column=3, padx=10, pady=10)
 
 output_text = tk.Text(root)
 output_text.grid(row=1, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.configure(state="disabled") #makes the text box only output, so the use cant type in it
 #i cant use pack because you cant have grid and pack in the same window
-
 output_text.delete("1.0", tk.END) #idk why but apparently i need to do this to clear preivious responses
 
-if results:
-    for row in results: #results is a list of tuples, which are like lists but unchangeable
-        output_text.insert(tk.END, f"Aircraft Name: {row[0]}\n") #inserts the first element of the tuple into the text box
 
 root.mainloop()
