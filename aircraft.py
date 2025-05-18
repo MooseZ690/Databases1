@@ -1,6 +1,7 @@
 import tkinter as tk #imports the module for creating windows
 import sqlite3
 
+aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes
 sql = ''  #initialize the sql variable
 DATABASE = "aircraft.db"
 results = []  #initialize the results variable
@@ -12,7 +13,7 @@ BASE_SELECT = """
 """ #base select statement - joins the foregin keys so i dont have to do it every funcition
 
 def fetch_and_print(sql):
-    global results
+    global results, aircraftnumber #makes these variables global so they can be used in the function
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     cursor.execute(sql)
@@ -20,14 +21,16 @@ def fetch_and_print(sql):
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     for skibidi in results: #results is a list of tuples, which are like lists but unchangeable
         
-        output_text.insert(tk.END, f"Aircraft Name: {skibidi[0]}\n")
+        output_text.insert(tk.END, f"[{aircraftnumber}] Aircraft Name: {skibidi[0]}\n")
         output_text.insert(tk.END, f"Top speed: {skibidi[1]}km/h\n")
         output_text.insert(tk.END, f"G Limit: {skibidi[2]}\n")
         output_text.insert(tk.END, f"Payload: {skibidi[3]}lbs\n")
         output_text.insert(tk.END, f"Climb Rate: {skibidi[4]}fpm\n")
         output_text.insert(tk.END, f"Manufacturer: {skibidi[5]}\n")
         output_text.insert(tk.END, "------------------------\n")
+        aircraftnumber += 1 #the next aircraft will be one higher
     output_text.configure(state="disabled") #makes the text box uneditable again
+    aircraftnumber = 1 #resets the variable for the next time this function is called
 
 def print_by_speed():
     global sql
