@@ -3,14 +3,16 @@ import sqlite3
 
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes
 sql = ''  #initialize the sql variable
-DATABASE = "aircraft.db"
 results = []  #initialize the results variable
+DATABASE = "aircraft.db"
 BASE_SELECT = """
-    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name
+    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name, country.country_name
     FROM aircraft
     INNER JOIN country ON aircraft.country = country.country_id
     INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
 """ #base select statement - joins the foregin keys so i dont have to do it every funcition
+#this isnt ai sir, i used a triple quote so i didnt have to use \n for each new line
+
 
 def fetch_and_print(sql):
     global results, aircraftnumber #makes these variables global so they can be used in the function
@@ -19,6 +21,7 @@ def fetch_and_print(sql):
     cursor.execute(sql)
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
+    output_text.delete(1.0, tk.END)
     for skibidi in results: #results is a list of tuples, which are like lists but unchangeable
         
         output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n")
