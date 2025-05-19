@@ -6,6 +6,8 @@ from time import sleep #imports the function sleep, allowing to simulate loading
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
+windowwidth = 668
+windowheight = 650 #lets the window sizing variables be changed later on
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
 sql = ''  #initialize the sql variable
 results = []  #initialize the results variable as a list
@@ -29,15 +31,16 @@ def fetch_and_print(sql):
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
-        output_text.insert(tk.END, f"[{aircraftnumber}] {tuple[0]}\n") #shows the plane name and the place in selected ranking from 1-max number of aircrafts, in this case 50
-        output_text.insert(tk.END, f"Top speed: {tuple[1]}km/h\n")
+        placement = '[' + str(aircraftnumber) + ']'
+        output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
+        output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n")
         output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
-        output_text.insert(tk.END, f"Payload: {tuple[3]}lbs\n")
-        output_text.insert(tk.END, f"Climb Rate: {tuple[4]}fpm\n")
+        output_text.insert(tk.END, f"Payload: {"{:,}".format(tuple[3])}lbs\n")
+        output_text.insert(tk.END, f"Climb Rate: {"{:,}".format(tuple[4])}fpm\n")  
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
         output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
-        output_text.insert(tk.END, "------------------------\n")
+        output_text.insert(tk.END, "━" * 20 + "\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
@@ -45,11 +48,13 @@ def fetch_and_print(sql):
 def america():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 1'
-    fetch_and_print(sql)
+    fetch_and_print(sql) 
+
 def russia():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 2'
-    fetch_and_print(sql)
+    fetch_and_print(sql) #these two functions haven't been implemented yet
+
 def print_by_speed():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
@@ -74,7 +79,7 @@ def print_by_climb_rate():
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
-root.geometry("668x650") #makes the window 668x600, just enough to fit the text box and i think its a pretty good size
+root.geometry(f"{windowwidth}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
 
 
 my_font = ("Helvetica", 10, "bold")
@@ -97,8 +102,9 @@ climbbutton.config(bg='black', fg='white')
 
 output_text = tk.Text(root)
 output_text.grid(row=3, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
-output_text.configure(state="disabled") #makes the text box only output, so the user cant type in it
+output_text.configure(state="disabled", bg='light gray') #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
+output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
 
 
 #adding a silhouette of a C5 galaxy just for looks
@@ -108,5 +114,10 @@ resized_image = original_image.resize((650, 159)) #uses the resize tool from pil
 plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
 image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label which can be put into the window
 image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the top
+
+bottomtext = tk.Label(root, text="The information presented in this database may not be totally accurate, sources vary.", font=('Arial', 7), bg="gray", fg="light gray")
+#bottomtext.grid(row=11, column=0, columnspan=4, pady=10)
+#not using this yet as it's not necessary
+
 
 root.mainloop() #opens the window
