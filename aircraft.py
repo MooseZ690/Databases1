@@ -8,7 +8,7 @@ from time import sleep #imports the function sleep, allowing to simulate loading
 
 buttonwidth = 14 #set width of buttons
 windowwidth = 668
-windowheight = 650 #lets the window sizing variables be changed later on
+windowheight = 700 #lets the window sizing variables be changed later on
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
 sql = ''  #initialize the sql variable
 results = []  #initialize the results variable as a list
