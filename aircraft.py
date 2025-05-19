@@ -1,6 +1,6 @@
 import tkinter as tk #imports the module for creating windows
-import sqlite3
-from PIL import Image, ImageTk
+import sqlite3 #import the module for conversing with the database
+from PIL import Image, ImageTk #these let you control images better, and integrate them into tkinter
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
@@ -25,9 +25,9 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
-    for skibidi in results: #results is a list of tuples, which are like lists but unchangeable. skibidi is each tuple
+    for skibidi in results: #results is a list of tuples, which are like lists but unchangeable. skibidi is each tuple in the list
         
-        output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n")
+        output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n") #shows the plane name and the place in selected ranking from 1-max number of aircrafts, in this case 50
         output_text.insert(tk.END, f"Top speed: {skibidi[1]}km/h\n")
         output_text.insert(tk.END, f"G Limit: {skibidi[2]}\n")
         output_text.insert(tk.END, f"Payload: {skibidi[3]}lbs\n")
@@ -35,7 +35,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Manufacturer: {skibidi[5]}\n")
         output_text.insert(tk.END, f"Country: {skibidi[6]}\n")
         output_text.insert(tk.END, "------------------------\n")
-        aircraftnumber += 1 #the next aircraft will be one higher
+        aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
 
@@ -63,19 +63,23 @@ def print_by_climb_rate():
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("AIRCRAFT DATABASE HAHAHAHA") #names the window
-root.geometry("668x610") #makes the window 668x600, just enough to fit the text box
+root.geometry("668x650") #makes the window 668x600, just enough to fit the text box both ways
 
-speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs the print_by_speed. 
+speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
+speedbutton.config(bg='red')
 
-gbutton = tk.Button(root, text="Sort by G Limit", command = print_by_g_limit) #creates a button in root that runs the print_by_g_limit.
+gbutton = tk.Button(root, text="Sort by G Limit", command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
 gbutton.grid(row=2, column=1, padx=10, pady=10)
+gbutton.config(bg='red')
 
-payloadbutton = tk.Button(root, text="Sort by Payload", command = print_by_payload) #creates a button in root that runs the print_by_payload.
+payloadbutton = tk.Button(root, text="Sort by Payload", command = print_by_payload) #creates a button in root that runs print_by_payload
 payloadbutton.grid(row=2, column=2, padx=10, pady=10)
+payloadbutton.config(bg='red')
 
-climbbutton = tk.Button(root, text="Sort by Climb Rate", command = print_by_climb_rate) #creates a button in root that runs the print_by_climb_rate.
+climbbutton = tk.Button(root, text="Sort by Climb Rate", command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
+climbbutton.config(bg='red')
 
 output_text = tk.Text(root)
 output_text.grid(row=3, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
@@ -83,9 +87,9 @@ output_text.configure(state="disabled") #makes the text box only output, so the 
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 
 
-#adding a sillhouette of a C5 galaxy just for looks
+#adding a silhouette of a C5 galaxy just for looks
 original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from the folder into the code using the Image module from pillow (PIL)
-width, height = original_image.size #gets the pixel size of the image
+width, height = original_image.size #gets the pixel size of the image 
 resized_image = original_image.resize((650, 159)) #uses the resize tool from pillow to change the image to fit the window, i calculated the height by finding the ratio of previous width to the width I want
 plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
 image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label which can be put into the window
