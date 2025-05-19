@@ -13,6 +13,7 @@ BASE_SELECT = """
     FROM aircraft
     INNER JOIN country ON aircraft.country = country.country_id
     INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
+    INNER JOIN size ON aircraft.size = size.size_id
 """ #base select statement - joins the foregin keys so i dont have to do it every funcition
 #this isnt ai sir, i used a triple quote so i didnt have to use \n for each new line
 
@@ -34,6 +35,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Climb Rate: {skibidi[4]}fpm\n")
         output_text.insert(tk.END, f"Manufacturer: {skibidi[5]}\n")
         output_text.insert(tk.END, f"Country: {skibidi[6]}\n")
+        output_text.insert(tk.END, f"Form factor: {skibidi[7]}\n")
         output_text.insert(tk.END, "------------------------\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
