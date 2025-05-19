@@ -36,7 +36,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Climb Rate: {tuple[4]}fpm\n")
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
-        output_text.insert(tk.END, f"Engine: {tuple[7]}\n")
+        output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
         output_text.insert(tk.END, "------------------------\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
