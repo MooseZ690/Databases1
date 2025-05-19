@@ -2,6 +2,8 @@ import tkinter as tk #imports the module for creating windows
 import sqlite3
 from PIL import Image, ImageTk
 
+#you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work
+
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes
 sql = ''  #initialize the sql variable
 results = []  #initialize the results variable
@@ -41,14 +43,17 @@ def print_by_speed():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
     fetch_and_print(sql)
+
 def print_by_g_limit():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.g_limit DESC'
     fetch_and_print(sql)
+
 def print_by_payload():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.payload_lbs DESC'
     fetch_and_print(sql)
+    
 def print_by_climb_rate():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
@@ -89,4 +94,4 @@ plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkin
 image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label
 image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the top
 
-root.mainloop()
+root.mainloop() #opens the window
