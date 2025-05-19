@@ -2,9 +2,9 @@ import tkinter as tk #imports the module for creating windows
 import sqlite3
 from PIL import Image, ImageTk
 
-#you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work
+#you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
-aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes
+aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
 sql = ''  #initialize the sql variable
 results = []  #initialize the results variable
 DATABASE = "aircraft.db"
@@ -62,9 +62,8 @@ def print_by_climb_rate():
 
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
-root.title("Aircraft Database") #names the window
+root.title("AIRCRAFT DATABASE HAHAHAHA") #names the window
 root.geometry("668x610") #makes the window 668x600, just enough to fit the text box
-
 
 speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs the print_by_speed. 
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
@@ -81,17 +80,14 @@ climbbutton.grid(row=2, column=3, padx=10, pady=10)
 output_text = tk.Text(root)
 output_text.grid(row=3, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled") #makes the text box only output, so the user cant type in it
-#i cant use pack because you cant use grid and pack for formatting in the same window
+#i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 
 
-#adding a sillhouette of a C5 galaxy just for looks hehe
-original_image = Image.open("c5galaxy.png")
+#adding a sillhouette of a C5 galaxy just for looks
+original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from the folder into the code using the Image module from pillow (PIL)
 width, height = original_image.size #gets the pixel size of the image
-new_width = 650 #because the window is 668x600 having width at 650 prevents clipping
-new_height = int(height * (new_width / width)) #to retain the aspect ratio, calculates the width because the ratio from old to new is new/old
-resized_image = original_image.resize((new_width, new_height)) #uses the resize tool from pillow to change the image to fit the window
+resized_image = original_image.resize((650, 159)) #uses the resize tool from pillow to change the image to fit the window, i calculated the height by finding the ratio of previous width to the width I want
 plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
 image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label
 image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the top
-
 root.mainloop() #opens the window
