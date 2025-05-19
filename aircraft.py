@@ -1,5 +1,6 @@
 import tkinter as tk #imports the module for creating windows
 import sqlite3
+from PIL import Image, ImageTk
 
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes
 sql = ''  #initialize the sql variable
@@ -57,28 +58,35 @@ def print_by_climb_rate():
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database") #names the window
-root.geometry("668x600") #makes the window 668x600, just enough to fit the text box
+root.geometry("668x610") #makes the window 668x600, just enough to fit the text box
 
 
 speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs the print_by_speed. 
-speedbutton.grid(row=0, column=0, padx=10, pady=10)
+speedbutton.grid(row=2, column=0, padx=10, pady=10)
 
 gbutton = tk.Button(root, text="Sort by G Limit", command = print_by_g_limit) #creates a button in root that runs the print_by_g_limit.
-gbutton.grid(row=0, column=1, padx=10, pady=10)
+gbutton.grid(row=2, column=1, padx=10, pady=10)
 
 payloadbutton = tk.Button(root, text="Sort by Payload", command = print_by_payload) #creates a button in root that runs the print_by_payload.
-payloadbutton.grid(row=0, column=2, padx=10, pady=10)
+payloadbutton.grid(row=2, column=2, padx=10, pady=10)
 
 climbbutton = tk.Button(root, text="Sort by Climb Rate", command = print_by_climb_rate) #creates a button in root that runs the print_by_climb_rate.
-climbbutton.grid(row=0, column=3, padx=10, pady=10)
+climbbutton.grid(row=2, column=3, padx=10, pady=10)
 
 output_text = tk.Text(root)
-output_text.grid(row=1, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.grid(row=3, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled") #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window
 
-plane_image = tk.PhotoImage(file=f15.ppm)
-image_label = tk.Label(root, image=plane_image, bg='gray')
-image_label.grid(row=11, column=0, columnspan=4, pady=(0,10))
+
+#adding a sillhouette of a C5 galaxy just for looks hehe
+original_image = Image.open("c5galaxy.png")
+width, height = original_image.size #gets the pixel size of the image
+new_width = 650 #because the window is 668x600 having width at 650 prevents clipping
+new_height = int(height * (new_width / width))
+resized_image = original_image.resize((new_width, new_height)) #uses the resize tool from pillow to change the image to fit the window
+plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
+image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label
+image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the top
 
 root.mainloop()
