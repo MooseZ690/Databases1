@@ -25,7 +25,7 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
-    for skibidi in results: #results is a list of tuples, which are like lists but unchangeable
+    for skibidi in results: #results is a list of tuples, which are like lists but unchangeable. skibidi is each tuple
         
         output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n")
         output_text.insert(tk.END, f"Top speed: {skibidi[1]}km/h\n")
@@ -78,7 +78,7 @@ climbbutton = tk.Button(root, text="Sort by Climb Rate", command = print_by_clim
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 
 output_text = tk.Text(root)
-output_text.grid(row=3, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.grid(row=3, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled") #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 
@@ -88,6 +88,7 @@ original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from
 width, height = original_image.size #gets the pixel size of the image
 resized_image = original_image.resize((650, 159)) #uses the resize tool from pillow to change the image to fit the window, i calculated the height by finding the ratio of previous width to the width I want
 plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
-image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label
+image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label which can be put into the window
 image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the top
+
 root.mainloop() #opens the window
