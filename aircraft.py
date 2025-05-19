@@ -67,19 +67,19 @@ root.configure(bg="gray") #sets the background color of the window
 root.title("AIRCRAFT DATABASE HAHAHAHA") #names the window
 root.geometry("668x650") #makes the window 668x600, just enough to fit the text box and i think its a pretty good size
 
-speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs print_by_speed
+speedbutton = tk.Button(root, text="Sort by Speed", font=("Helvetica", 18), command = print_by_speed) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
 speedbutton.config(bg='red')
 
-gbutton = tk.Button(root, text="Sort by G Limit", command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
+gbutton = tk.Button(root, text="Sort by G Limit", font=("Helvetica", 18), command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
 gbutton.grid(row=2, column=1, padx=10, pady=10)
 gbutton.config(bg='red')
 
-payloadbutton = tk.Button(root, text="Sort by Payload", command = print_by_payload) #creates a button in root that runs print_by_payload
+payloadbutton = tk.Button(root, text="Sort by Payload", font=("Helvetica", 18), command = print_by_payload) #creates a button in root that runs print_by_payload
 payloadbutton.grid(row=2, column=2, padx=10, pady=10)
 payloadbutton.config(bg='red')
 
-climbbutton = tk.Button(root, text="Sort by Climb Rate", command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
+climbbutton = tk.Button(root, text="Sort by Climb Rate", font=("Helvetica", 18), command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 climbbutton.config(bg='red')
 
