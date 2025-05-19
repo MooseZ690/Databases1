@@ -6,6 +6,7 @@ from time import sleep #imports the function sleep, allowing to simulate loading
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
+buttonwidth = 14 #set width of buttons
 windowwidth = 668
 windowheight = 650 #lets the window sizing variables be changed later on
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
@@ -63,7 +64,7 @@ def france():
 def germany():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 4'
-    fetch_and_print(sql) #these functions haven't been implemented yet
+    fetch_and_print(sql)
 
 def print_by_speed():
     global sql
@@ -94,36 +95,36 @@ root.geometry(f"{windowwidth}x{windowheight}") #sizes the window, currently just
 
 my_font = ("Helvetica", 10, "bold")
 
-speedbutton = tk.Button(root, text="Sort by Speed", font=(my_font), command = print_by_speed) #creates a button in root that runs print_by_speed
+speedbutton = tk.Button(root, text="Sort by Speed", font=(my_font), command = print_by_speed, width=buttonwidth) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
 speedbutton.config(bg='black', fg='white')
 
-gbutton = tk.Button(root, text="Sort by G Limit", font=(my_font), command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
+gbutton = tk.Button(root, text="Sort by G Limit", font=(my_font), command = print_by_g_limit, width=buttonwidth) #creates a button in root that runs print_by_g_limit
 gbutton.grid(row=2, column=1, padx=10, pady=10)
 gbutton.config(bg='black', fg='white')
 
-payloadbutton = tk.Button(root, text="Sort by Payload", font=(my_font), command = print_by_payload) #creates a button in root that runs print_by_payload
+payloadbutton = tk.Button(root, text="Sort by Payload", font=(my_font), command = print_by_payload, width=buttonwidth) #creates a button in root that runs print_by_payload
 payloadbutton.grid(row=2, column=2, padx=10, pady=10)
 payloadbutton.config(bg='black', fg='white')
 
-climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
+climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command = print_by_climb_rate, width=buttonwidth) #creates a button in root that runs print_by_climb_rate
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 climbbutton.config(bg='black', fg='white')
 
-usabutton = tk.Button(root, text='American', font=(my_font), command = america)
-usabutton.grid(row=3, column=4, padx=10, pady=10)
+usabutton = tk.Button(root, text='American', font=(my_font), command = america, width=buttonwidth) #creates a button in root that shows all planes from america
+usabutton.grid(row=3, column=0, padx=10, pady=10)
 usabutton.config(bg='black', fg='white')
 
-rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia)
-rusbutton.grid(row=3, column=5, padx=10, pady=10)
+rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia, width=buttonwidth) #creates a button in root that shows all planes from russia
+rusbutton.grid(row=3, column=1, padx=10, pady=10)
 rusbutton.config(bg='black', fg='white')
 
-frabutton = tk.Button(root, text='French', font=(my_font), command = france)
-frabutton.grid(row=3, column=4, padx=10, pady=10)
+frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=buttonwidth) #creates a button in root that shows all planes from france
+frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
-gerbutton = tk.Button(root, text='German', font=(my_font), command = germany)
-gerbutton.grid(row=3, column=4, padx=10, pady=10)
+gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, width=buttonwidth) #creates a button in root that shows all planes from germany
+gerbutton.grid(row=3, column=3, padx=10, pady=10)
 gerbutton.config(bg='black', fg='white')
 
 output_text = tk.Text(root)
