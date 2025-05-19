@@ -1,12 +1,14 @@
-import tkinter as tk #imports the module for creating windows
+import tkinter as tk #imports tkinter - used for opening windows, buttons etc
 import sqlite3 #import the module for conversing with the database
 from PIL import Image, ImageTk #these let you control images better, and integrate them into tkinter
+import time
+from time import sleep #imports the function sleep, allowing to simulate loading
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
 sql = ''  #initialize the sql variable
-results = []  #initialize the results variable
+results = []  #initialize the results variable as a list
 DATABASE = "aircraft.db"
 BASE_SELECT = """
     SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name, country.country_name, engine.engine_name
@@ -26,21 +28,28 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
-    for skibidi in results: #results is a list of tuples, which are like lists but unchangeable. skibidi is each tuple in the list
-        
-        output_text.insert(tk.END, f"[{aircraftnumber}] {skibidi[0]}\n") #shows the plane name and the place in selected ranking from 1-max number of aircrafts, in this case 50
-        output_text.insert(tk.END, f"Top speed: {skibidi[1]}km/h\n")
-        output_text.insert(tk.END, f"G Limit: {skibidi[2]}\n")
-        output_text.insert(tk.END, f"Payload: {skibidi[3]}lbs\n")
-        output_text.insert(tk.END, f"Climb Rate: {skibidi[4]}fpm\n")
-        output_text.insert(tk.END, f"Manufacturer: {skibidi[5]}\n")
-        output_text.insert(tk.END, f"Country: {skibidi[6]}\n")
-        output_text.insert(tk.END, f"Engine: {skibidi[7]}\n")
+    for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
+        output_text.insert(tk.END, f"[{aircraftnumber}] {tuple[0]}\n") #shows the plane name and the place in selected ranking from 1-max number of aircrafts, in this case 50
+        output_text.insert(tk.END, f"Top speed: {tuple[1]}km/h\n")
+        output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
+        output_text.insert(tk.END, f"Payload: {tuple[3]}lbs\n")
+        output_text.insert(tk.END, f"Climb Rate: {tuple[4]}fpm\n")
+        output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
+        output_text.insert(tk.END, f"Country: {tuple[6]}\n")
+        output_text.insert(tk.END, f"Engine: {tuple[7]}\n")
         output_text.insert(tk.END, "------------------------\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
 
+def america():
+    global sql
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 1'
+    fetch_and_print(sql)
+def russia():
+    global sql
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 2'
+    fetch_and_print(sql)
 def print_by_speed():
     global sql
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
@@ -64,24 +73,27 @@ def print_by_climb_rate():
 
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
-root.title("AIRCRAFT DATABASE HAHAHAHA") #names the window
+root.title("Aircraft Database (11DTP Project)") #names the window
 root.geometry("668x650") #makes the window 668x600, just enough to fit the text box and i think its a pretty good size
 
-speedbutton = tk.Button(root, text="Sort by Speed", font=("Helvetica", 18), command = print_by_speed) #creates a button in root that runs print_by_speed
+
+my_font = ("Helvetica", 10, "bold")
+
+speedbutton = tk.Button(root, text="Sort by Speed", font=(my_font), command = print_by_speed) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
-speedbutton.config(bg='red')
+speedbutton.config(bg='black', fg='white')
 
-gbutton = tk.Button(root, text="Sort by G Limit", font=("Helvetica", 18), command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
+gbutton = tk.Button(root, text="Sort by G Limit", font=(my_font), command = print_by_g_limit) #creates a button in root that runs print_by_g_limit
 gbutton.grid(row=2, column=1, padx=10, pady=10)
-gbutton.config(bg='red')
+gbutton.config(bg='black', fg='white')
 
-payloadbutton = tk.Button(root, text="Sort by Payload", font=("Helvetica", 18), command = print_by_payload) #creates a button in root that runs print_by_payload
+payloadbutton = tk.Button(root, text="Sort by Payload", font=(my_font), command = print_by_payload) #creates a button in root that runs print_by_payload
 payloadbutton.grid(row=2, column=2, padx=10, pady=10)
-payloadbutton.config(bg='red')
+payloadbutton.config(bg='black', fg='white')
 
-climbbutton = tk.Button(root, text="Sort by Climb Rate", font=("Helvetica", 18), command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
+climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command = print_by_climb_rate) #creates a button in root that runs print_by_climb_rate
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
-climbbutton.config(bg='red')
+climbbutton.config(bg='black', fg='white')
 
 output_text = tk.Text(root)
 output_text.grid(row=3, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
