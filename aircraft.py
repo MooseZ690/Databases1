@@ -83,7 +83,7 @@ output_text.configure(state="disabled") #makes the text box only output, so the 
 original_image = Image.open("c5galaxy.png")
 width, height = original_image.size #gets the pixel size of the image
 new_width = 650 #because the window is 668x600 having width at 650 prevents clipping
-new_height = int(height * (new_width / width))
+new_height = int(height * (new_width / width)) #to retain the aspect ratio, calculates the width because the ratio from old to new is new/old
 resized_image = original_image.resize((new_width, new_height)) #uses the resize tool from pillow to change the image to fit the window
 plane_image = ImageTk.PhotoImage(resized_image) #makes the new image into a tkinter usable thing
 image_label = tk.Label(root, image=plane_image, bg='gray') #tkinter turns the image into a label
