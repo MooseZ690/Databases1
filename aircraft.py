@@ -40,7 +40,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
         output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
-        output_text.insert(tk.END, "━" * 20 + "\n")
+        output_text.insert(tk.END, "━" * 22 + "\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
@@ -53,7 +53,17 @@ def america():
 def russia():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 2'
-    fetch_and_print(sql) #these two functions haven't been implemented yet
+    fetch_and_print(sql)
+
+def france():
+    global sql
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 3'
+    fetch_and_print(sql)
+
+def germany():
+    global sql
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 4'
+    fetch_and_print(sql) #these functions haven't been implemented yet
 
 def print_by_speed():
     global sql
@@ -100,8 +110,24 @@ climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 climbbutton.config(bg='black', fg='white')
 
+usabutton = tk.Button(root, text='American', font=(my_font), command = america)
+usabutton.grid(row=3, column=4, padx=10, pady=10)
+usabutton.config(bg='black', fg='white')
+
+rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia)
+rusbutton.grid(row=3, column=5, padx=10, pady=10)
+rusbutton.config(bg='black', fg='white')
+
+frabutton = tk.Button(root, text='French', font=(my_font), command = france)
+frabutton.grid(row=3, column=4, padx=10, pady=10)
+frabutton.config(bg='black', fg='white')
+
+gerbutton = tk.Button(root, text='German', font=(my_font), command = germany)
+gerbutton.grid(row=3, column=4, padx=10, pady=10)
+gerbutton.config(bg='black', fg='white')
+
 output_text = tk.Text(root)
-output_text.grid(row=3, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.grid(row=4, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled", bg='light gray') #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
