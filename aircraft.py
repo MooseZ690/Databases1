@@ -30,6 +30,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Payload: {skibidi[3]}lbs\n")
         output_text.insert(tk.END, f"Climb Rate: {skibidi[4]}fpm\n")
         output_text.insert(tk.END, f"Manufacturer: {skibidi[5]}\n")
+        output_text.insert(tk.END, f"Country: {skibidi[6]}\n")
         output_text.insert(tk.END, "------------------------\n")
         aircraftnumber += 1 #the next aircraft will be one higher
     output_text.configure(state="disabled") #makes the text box uneditable again
@@ -76,5 +77,8 @@ output_text.grid(row=1, column=0, columnspan=4, rowspan=10, padx=10, pady=20) #m
 output_text.configure(state="disabled") #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window
 
+plane_image = tk.PhotoImage(file=f15.ppm)
+image_label = tk.Label(root, image=plane_image, bg='gray')
+image_label.grid(row=11, column=0, columnspan=4, pady=(0,10))
 
 root.mainloop()
