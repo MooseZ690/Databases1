@@ -63,7 +63,7 @@ def print_by_climb_rate():
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("AIRCRAFT DATABASE HAHAHAHA") #names the window
-root.geometry("668x650") #makes the window 668x600, just enough to fit the text box both ways
+root.geometry("668x650") #makes the window 668x600, just enough to fit the text box and i think its a pretty good size
 
 speedbutton = tk.Button(root, text="Sort by Speed", command = print_by_speed) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
