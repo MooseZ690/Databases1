@@ -1,8 +1,6 @@
 import tkinter as tk #imports tkinter - used for opening windows, buttons etc
 import sqlite3 #import the module for conversing with the database
 from PIL import Image, ImageTk #these let you control images better, and integrate them into tkinter
-import time
-from time import sleep #imports the function sleep, allowing to simulate loading
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
@@ -34,14 +32,21 @@ def fetch_and_print(sql):
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
         placement = '[' + str(aircraftnumber) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
-        output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n")
+        output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n") #the format function adds commas to numbers, for readability. 
         output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
         output_text.insert(tk.END, f"Payload: {"{:,}".format(tuple[3])}lbs\n")
         output_text.insert(tk.END, f"Climb Rate: {"{:,}".format(tuple[4])}fpm\n")  
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
-        output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
-        output_text.insert(tk.END, "━" * 21 + "\n")
+        output_text.insert(tk.END, f"Engine type: {tuple[7]}\n\n")
+
+        output_text.insert(tk.END, f'''The {tuple[0]} is an aircraft manufactured in {tuple[6]}, primarily by 
+{tuple[5]}. Powered by {tuple[7].lower()}(s), it has a top 
+speed of {"{:,}".format(tuple[1])}km/h, and can climb at {tuple[4]}fpm. 
+The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G limit of {tuple[2]}Gs.
+''') #formats the results into a more readable sentence. 
+        
+        output_text.insert(tk.END, "\n" + "━" * 21 + "\n\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
@@ -86,12 +91,7 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
-def die():
-    extra = tk.Tk(root)
-    extra.geometry("200x100")
-    extra.title('DIE')
-    for i in range(10):
-        extra.mainloop()
+
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
@@ -131,6 +131,7 @@ frabutton.config(bg='black', fg='white')
 gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, width=buttonwidth) #creates a button in root that shows all planes from germany
 gerbutton.grid(row=3, column=3, padx=10, pady=10)
 gerbutton.config(bg='black', fg='white')
+
 
 output_text = tk.Text(root)
 output_text.grid(row=4, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
