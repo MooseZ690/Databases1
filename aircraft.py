@@ -140,6 +140,7 @@ output_text.configure(state="disabled", bg='light gray') #makes the text box onl
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
 
 
+
 #adding a silhouette of a C5 galaxy just for visual effects
 original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from the folder into the code using the Image module from pillow (PIL)
 width, height = original_image.size #gets the pixel size of the image 
@@ -150,7 +151,7 @@ image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the 
 
 bottomtext = tk.Label(root, text="The information presented in this database may not be totally accurate, sources vary.", font=('Arial', 7), bg="gray", fg="light gray")
 #bottomtext.grid(row=11, column=0, columnspan=4, pady=10)
-#not using this yet as it's not necessary
+#not using this yet as it's not really necessary but still leaving it
 
 
 root.mainloop() #opens the window
