@@ -41,7 +41,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
         output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
-        output_text.insert(tk.END, "━" * 22 + "\n")
+        output_text.insert(tk.END, "━" * 21 + "\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
@@ -86,7 +86,12 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
-
+def die():
+    extra = tk.Tk(root)
+    extra.geometry("200x100")
+    extra.title('DIE')
+    for i in range(10):
+        extra.mainloop()
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
@@ -134,7 +139,7 @@ output_text.configure(state="disabled", bg='light gray') #makes the text box onl
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
 
 
-#adding a silhouette of a C5 galaxy just for looks
+#adding a silhouette of a C5 galaxy just for visual effects
 original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from the folder into the code using the Image module from pillow (PIL)
 width, height = original_image.size #gets the pixel size of the image 
 resized_image = original_image.resize((650, 159)) #uses the resize tool from pillow to change the image to fit the window, i calculated the height by finding the ratio of previous width to the width I want
