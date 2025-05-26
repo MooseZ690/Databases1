@@ -4,6 +4,8 @@ from PIL import Image, ImageTk #these let you control images better, and integra
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
+
+spacer = '-' #initializes the spacer used for multiple aircraft results
 buttonwidth = 14 #set width of buttons
 windowwidth = 668
 windowheight = 700 #lets the window sizing variables be changed later on
@@ -31,6 +33,8 @@ def fetch_and_print(sql):
     output_text.delete(1.0, tk.END)
     if not results:
         output_text.insert(tk.END, 'No aircraft match your search terms. ')
+    elif len(results) == 1:
+        spacer = '' #makes there be no spacer if only one result
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
         placement = '[' + str(aircraftnumber) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
@@ -48,7 +52,7 @@ speed of {"{:,}".format(tuple[1])}km/h, and can climb at {tuple[4]}fpm.
 The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G limit of {tuple[2]}Gs.
 ''') #formats the results into a more readable sentence. 
         
-        output_text.insert(tk.END, "\n" + "━" * 21 + "\n\n")
+        output_text.insert(tk.END, "\n" + "{spacer}" * 21 + "\n\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
@@ -143,7 +147,7 @@ gerbutton.config(bg='black', fg='white')
 searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
 searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
 
-searchbutton = tk.Button(root, text='Search/All', command=search) #makes a button that runs the search function with the data from the searchbox
+searchbutton = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
 searchbutton.grid(column = 3, row=4, padx=10, pady=10)
 
 output_text = tk.Text(root)
