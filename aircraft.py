@@ -54,8 +54,9 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
     aircraftnumber = 1 #resets the variable for the next time this function is called
 
 def search():
-    global sql
     aircraftname = searchbox.get()
+    searchbox.delete(0, tk.END)
+    global sql
     sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
     fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
 
