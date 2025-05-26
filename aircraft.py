@@ -29,6 +29,8 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
+    if not results:
+        output_text.insert(tk.END, 'No aircraft match your search terms. ')
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
         placement = '[' + str(aircraftnumber) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
@@ -51,9 +53,15 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
 
+def search():
+    global sql
+    aircraftname = searchbox.get()
+    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that contain the input
+    fetch_and_print(sql)
+
 def america():
     global sql
-    sql = f'{BASE_SELECT}\n WHERE country.country_id = 1'
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 1' #adds the clause showing only planes from a specific country to BASE_SELECT
     fetch_and_print(sql) 
 
 def russia():
@@ -73,7 +81,7 @@ def germany():
 
 def print_by_speed():
     global sql
-    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
+    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC' #adds the clause sorting by a specific spec to BASE_SELECT
     fetch_and_print(sql)
 
 def print_by_g_limit():
@@ -132,9 +140,14 @@ gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, wi
 gerbutton.grid(row=3, column=3, padx=10, pady=10)
 gerbutton.config(bg='black', fg='white')
 
+searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
+searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
+
+searchbutton = tk.Button(root, text='Search', command=search) #makes a button that runs the search function with the data from the searchbox
+searchbutton.grid(column = 2, row=4, padx=10, pady=20)
 
 output_text = tk.Text(root)
-output_text.grid(row=4, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.grid(row=5, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled", bg='light gray') #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
