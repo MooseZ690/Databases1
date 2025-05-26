@@ -1,8 +1,6 @@
 import tkinter as tk #imports tkinter - used for opening windows, buttons etc
 import sqlite3 #import the module for conversing with the database
 from PIL import Image, ImageTk #these let you control images better, and integrate them into tkinter
-import time
-from time import sleep #imports the function sleep, allowing to simulate loading
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
@@ -31,25 +29,41 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting resylts
     output_text.delete(1.0, tk.END)
+    if not results:
+        output_text.insert(tk.END, 'No aircraft match your search terms. ')
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
         placement = '[' + str(aircraftnumber) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
-        output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n")
+        output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n") #the format function adds commas to numbers, for readability. 
         output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
         output_text.insert(tk.END, f"Payload: {"{:,}".format(tuple[3])}lbs\n")
         output_text.insert(tk.END, f"Climb Rate: {"{:,}".format(tuple[4])}fpm\n")  
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
-        output_text.insert(tk.END, f"Engine type: {tuple[7]}\n")
-        output_text.insert(tk.END, "━" * 21 + "\n")
+        output_text.insert(tk.END, f"Engine type: {tuple[7]}\n\n")
+
+        output_text.insert(tk.END, f'''The {tuple[0]} is an aircraft manufactured in {tuple[6]}, primarily by 
+{tuple[5]}. Powered by {tuple[7].lower()}(s), it has a top 
+speed of {"{:,}".format(tuple[1])}km/h, and can climb at {tuple[4]}fpm. 
+The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G limit of {tuple[2]}Gs.
+''') #formats the results into a more readable sentence. 
+        
+        output_text.insert(tk.END, "\n" + "━" * 21 + "\n\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
 
+def search():
+    aircraftname = searchbox.get()
+    searchbox.delete(0, tk.END)
+    global sql
+    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
+    fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
+
 def america():
     global sql
-    sql = f'{BASE_SELECT}\n WHERE country.country_id = 1'
-    fetch_and_print(sql) 
+    sql = f'{BASE_SELECT}\n WHERE country.country_id = 1' #adds the clause showing only planes from a specific country to BASE_SELECT
+    fetch_and_print(sql)
 
 def russia():
     global sql
@@ -68,7 +82,7 @@ def germany():
 
 def print_by_speed():
     global sql
-    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
+    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC' #adds the clause sorting by a specific spec to BASE_SELECT
     fetch_and_print(sql)
 
 def print_by_g_limit():
@@ -86,12 +100,7 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
-def die():
-    extra = tk.Tk(root)
-    extra.geometry("200x100")
-    extra.title('DIE')
-    for i in range(10):
-        extra.mainloop()
+
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
@@ -132,11 +141,18 @@ gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, wi
 gerbutton.grid(row=3, column=3, padx=10, pady=10)
 gerbutton.config(bg='black', fg='white')
 
+searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
+searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
+
+searchbutton = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
+searchbutton.grid(column = 3, row=4, padx=10, pady=10)
+
 output_text = tk.Text(root)
-output_text.grid(row=4, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
+output_text.grid(row=5, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
 output_text.configure(state="disabled", bg='light gray') #makes the text box only output, so the user cant type in it
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
+
 
 
 #adding a silhouette of a C5 galaxy just for visual effects
@@ -149,7 +165,7 @@ image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the 
 
 bottomtext = tk.Label(root, text="The information presented in this database may not be totally accurate, sources vary.", font=('Arial', 7), bg="gray", fg="light gray")
 #bottomtext.grid(row=11, column=0, columnspan=4, pady=10)
-#not using this yet as it's not necessary
+#not using this yet as it's not really necessary but still leaving it
 
 
 root.mainloop() #opens the window
