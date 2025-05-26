@@ -56,13 +56,13 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
 def search():
     global sql
     aircraftname = searchbox.get()
-    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that contain the input
-    fetch_and_print(sql)
+    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
+    fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
 
 def america():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 1' #adds the clause showing only planes from a specific country to BASE_SELECT
-    fetch_and_print(sql) 
+    fetch_and_print(sql)
 
 def russia():
     global sql
@@ -143,8 +143,8 @@ gerbutton.config(bg='black', fg='white')
 searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
 searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
 
-searchbutton = tk.Button(root, text='Search', command=search) #makes a button that runs the search function with the data from the searchbox
-searchbutton.grid(column = 2, row=4, padx=10, pady=20)
+searchbutton = tk.Button(root, text='Search/All', command=search) #makes a button that runs the search function with the data from the searchbox
+searchbutton.grid(column = 3, row=4, padx=10, pady=10)
 
 output_text = tk.Text(root)
 output_text.grid(row=5, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
