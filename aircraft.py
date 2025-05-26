@@ -52,7 +52,7 @@ speed of {"{:,}".format(tuple[1])}km/h, and can climb at {tuple[4]}fpm.
 The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G limit of {tuple[2]}Gs.
 ''') #formats the results into a more readable sentence. 
         
-        output_text.insert(tk.END, "\n" + "{spacer}" * 21 + "\n\n")
+        output_text.insert(tk.END, "\n" + spacer * 21 + "\n\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called
