@@ -13,7 +13,7 @@ sql = ''  #initialize the sql variable
 results = []  #initialize the results variable as a list
 DATABASE = "aircraft.db"
 BASE_SELECT = """
-    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name, country.country_name, engine.engine_name
+    SELECT aircraft.aircraft_name, aircraft.top_speed_kmh, aircraft.g_limit, aircraft.payload_lbs, aircraft.climb_rate_fpm, manufacturer.manufacturer_name, country.country_name, engine.engine_name, aircraft.year
     FROM aircraft
     INNER JOIN country ON aircraft.country = country.country_id
     INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
@@ -37,6 +37,7 @@ def fetch_and_print(sql):
         output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n") #the format function adds commas to numbers, for readability. 
         output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
         output_text.insert(tk.END, f"Payload: {"{:,}".format(tuple[3])}lbs\n")
+        output_text.insert(tk.END, f'Year of release: {tuple[8]}\n')
         output_text.insert(tk.END, f"Climb Rate: {"{:,}".format(tuple[4])}fpm\n")  
         output_text.insert(tk.END, f"Manufacturer: {tuple[5]}\n")
         output_text.insert(tk.END, f"Country: {tuple[6]}\n")
