@@ -1,10 +1,11 @@
-import tkinter as tk #imports tkinter - used for opening windows, buttons etc
+import tkinter as tk #imports tkinter - module used for opening windows, buttons etc. 'as tk' shortens future references
 import sqlite3 #import the module for conversing with the database
-from PIL import Image, ImageTk #these let you control images better, and integrate them into tkinter
+from PIL import Image, ImageTk #python image library (PIL) lets you control images better, and integrate them into tkinter
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
 buttonwidth = 14 #set width of buttons
+dropdownwidth = 10
 windowwidth = 668
 windowheight = 700 #lets the window sizing variables be changed later on
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
@@ -17,8 +18,7 @@ BASE_SELECT = """
     INNER JOIN country ON aircraft.country = country.country_id
     INNER JOIN manufacturer ON aircraft.manufacturer = manufacturer.manufacturer_id
     INNER JOIN engine ON aircraft.engine = engine.engine_id
-""" #base select statement - joins the foregin keys so i dont have to do it every funcition
-#this isnt ai sir, i used a triple quote so i didnt have to use \n for each new line
+""" #base select statement - joins the foregin keys so I don't have to do it every function
 
 
 def fetch_and_print(sql):
@@ -27,11 +27,11 @@ def fetch_and_print(sql):
     cursor = db.cursor()
     cursor.execute(sql)
     results = cursor.fetchall()
-    output_text.configure(state="normal") #makes the text box editable just while inserting resylts
+    output_text.configure(state="normal") #makes the text box editable just while inserting results
     output_text.delete(1.0, tk.END)
     if not results:
         output_text.insert(tk.END, 'No aircraft match your search terms. ')
-    for tuple in results: #results is a list of tuples, which are like lists but unchangeable. tuple is each tuple in the list
+    for tuple in results: #results is a list of tuples, which are like lists but unchangeable. the variable 'tuple' refers to each tuple in the list
         placement = '[' + str(aircraftnumber) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
         output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n") #the format function adds commas to numbers, for readability. 
@@ -51,19 +51,19 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
         output_text.insert(tk.END, "\n" + "━" * 21 + "\n\n")
         aircraftnumber += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
-    aircraftnumber = 1 #resets the variable for the next time this function is called
+    aircraftnumber = 1 #resets the variable for the next time this function is called - the next search, sort, etc.
 
-def search():
-    aircraftname = searchbox.get()
-    searchbox.delete(0, tk.END)
+def search(*args):
     global sql
+    aircraftname = searchbox.get()
     sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
     fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
 
+#functions to show aircraft only from the selected country
 def america():
-    global sql
+    global sql #this makes sql variable created in this function useable everywhere
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 1' #adds the clause showing only planes from a specific country to BASE_SELECT
-    fetch_and_print(sql)
+    fetch_and_print(sql) #runs the fetch_and_print function with the edited sql statement
 
 def russia():
     global sql
@@ -75,15 +75,11 @@ def france():
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 3'
     fetch_and_print(sql)
 
-def germany():
-    global sql
-    sql = f'{BASE_SELECT}\n WHERE country.country_id = 4'
-    fetch_and_print(sql)
-
+#functions to sort aircraft by performance statistics
 def print_by_speed():
     global sql
-    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC' #adds the clause sorting by a specific spec to BASE_SELECT
-    fetch_and_print(sql)
+    sql = f'{BASE_SELECT}\n ORDER BY aircraft.top_speed_kmh DESC'
+    fetch_and_print(sql) #
 
 def print_by_g_limit():
     global sql
@@ -100,12 +96,23 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
+def print_by_year(*args): #apparently used so the function can take more than one input
+    global sql
+    yearorder = year_sort_order.get()
+    if yearorder == 'Old - New':
+        order = 'ASC'
+    elif yearorder == 'New - Old':
+        order = 'DESC'
+    sql = f'{BASE_SELECT}\n ORDER BY aircraft.year {order}'
+    fetch_and_print(sql)
+
 
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
 root.geometry(f"{windowwidth}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
 
+year_sort_order = tk.StringVar(value="Year")
 
 my_font = ("Helvetica", 10, "bold")
 
@@ -133,17 +140,19 @@ rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia, wi
 rusbutton.grid(row=3, column=1, padx=10, pady=10)
 rusbutton.config(bg='black', fg='white')
 
-frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=buttonwidth) #creates a button in root that shows all planes from france
+frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=dropdownwidth) #creates a button in root that shows all planes from france
 frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
-gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, width=buttonwidth) #creates a button in root that shows all planes from germany
-gerbutton.grid(row=3, column=3, padx=10, pady=10)
-gerbutton.config(bg='black', fg='white')
+year_dropdown = tk.OptionMenu(root, year_sort_order, "New - Old", "Old - New") #adds a dropdown with options for the year sorting
+year_dropdown.config(width=buttonwidth)
+year_dropdown.grid(row=3, column=3, padx=10, pady=10)
+year_dropdown.config(bg='black', fg='white')
+year_sort_order.trace_add("write", print_by_year) # Call print_by_year function whenever year_sort_order variable is updated
 
 searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
 searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
-
+searchbox.bind('<Return>', search) #binds the enter key to the search button
 searchbutton = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
 searchbutton.grid(column = 3, row=4, padx=10, pady=10)
 
@@ -153,9 +162,7 @@ output_text.configure(state="disabled", bg='light gray') #makes the text box onl
 #i cant use pack because you cant use grid and pack for formatting in the same window - also i don't want to make a new container so i just use the window itself
 output_text.tag_configure("bold", font=("TkDefaultFont", 10, "bold")) #makes a bold tag so i can use it in the output text box, tkinter doesn't support rich text formatting
 
-
-
-#adding a silhouette of a C5 galaxy just for visual effects
+#adding a sillhouette of a C5 galaxy just for visual effects
 original_image = Image.open("c5galaxy.png") #imports the image c5galaxy.png from the folder into the code using the Image module from pillow (PIL)
 width, height = original_image.size #gets the pixel size of the image 
 resized_image = original_image.resize((650, 159)) #uses the resize tool from pillow to change the image to fit the window, i calculated the height by finding the ratio of previous width to the width I want
@@ -165,7 +172,7 @@ image_label.grid(row=1, column=0, columnspan=4, pady=10) #puts the label at the 
 
 bottomtext = tk.Label(root, text="The information presented in this database may not be totally accurate, sources vary.", font=('Arial', 7), bg="gray", fg="light gray")
 #bottomtext.grid(row=11, column=0, columnspan=4, pady=10)
-#not using this yet as it's not really necessary but still leaving it
+#not using this yet as it's not really necessary but still leaving it in
 
 
 root.mainloop() #opens the window
