@@ -52,7 +52,7 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called - the next search, sort, etc.
 
-def search():
+def search(*args): #*args means I can use the enter key to run the function
     aircraftname = searchbox.get() #gets the input from the searchbox as the variable aircraftname
     searchbox.delete(0, tk.END) #deletes the contents of the searchbox
     global sql #this makes sql variable created in this function useable everywhere
@@ -73,11 +73,6 @@ def russia():
 def france():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 3'
-    fetch_and_print(sql)
-
-def germany():
-    global sql
-    sql = f'{BASE_SELECT}\n WHERE country.country_id = 4'
     fetch_and_print(sql)
 
 #functions to sort aircraft by performance statistics
@@ -101,12 +96,23 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
+def print_by_year(*args): #apparently used so the function can take more than one input
+    global sql
+    yearorder = year_sort_order.get()
+    if yearorder == 'Old - New':
+        order = 'ASC'
+    elif yearorder == 'New - Old':
+        order = 'DESC'
+    sql = f'{BASE_SELECT}\n ORDER BY aircraft.year {order}'
+    fetch_and_print(sql)
+
 
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
 root.geometry(f"{windowwidth}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
 
+year_sort_order = tk.StringVar(value="Year")
 
 my_font = ("Helvetica", 10, "bold")
 
@@ -138,13 +144,14 @@ frabutton = tk.Button(root, text='French', font=(my_font), command = france, wid
 frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
-gerbutton = tk.Button(root, text='German', font=(my_font), command = germany, width=buttonwidth) #creates a button in root that shows all planes from germany
-gerbutton.grid(row=3, column=3, padx=10, pady=10)
-gerbutton.config(bg='black', fg='white')
+year_dropdown = tk.OptionMenu(root, year_sort_order, "New - Old", "Old - New", width=buttonwidth) #adds a dropdown with options for the year sorting
+year_dropdown.grid(row=3, column=3, padx=10, pady=10)
+year_dropdown.config(bg='black', fg='white')
+year_sort_order.trace_add("write", print_by_year) # Call print_by_year function whenever year_sort_order variable is updated
 
 searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
 searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
-
+searchbox.bind('<Return>', search) #binds the enter key to the search button
 searchbutton = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
 searchbutton.grid(column = 3, row=4, padx=10, pady=10)
 
