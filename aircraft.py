@@ -5,6 +5,7 @@ from PIL import Image, ImageTk #python image library (PIL) lets you control imag
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
 buttonwidth = 14 #set width of buttons
+dropdownwidth = 10
 windowwidth = 668
 windowheight = 700 #lets the window sizing variables be changed later on
 aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
@@ -52,11 +53,10 @@ The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G li
     output_text.configure(state="disabled") #makes the text box uneditable again
     aircraftnumber = 1 #resets the variable for the next time this function is called - the next search, sort, etc.
 
-def search(*args): #*args means I can use the enter key to run the function
-    aircraftname = searchbox.get() #gets the input from the searchbox as the variable aircraftname
-    searchbox.delete(0, tk.END) #deletes the contents of the searchbox
-    global sql #this makes sql variable created in this function useable everywhere
-    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input from searchbox
+def search(*args):
+    global sql
+    aircraftname = searchbox.get()
+    sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
     fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
 
 #functions to show aircraft only from the selected country
@@ -140,11 +140,12 @@ rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia, wi
 rusbutton.grid(row=3, column=1, padx=10, pady=10)
 rusbutton.config(bg='black', fg='white')
 
-frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=buttonwidth) #creates a button in root that shows all planes from france
+frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=dropdownwidth) #creates a button in root that shows all planes from france
 frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
-year_dropdown = tk.OptionMenu(root, year_sort_order, "New - Old", "Old - New", width=buttonwidth) #adds a dropdown with options for the year sorting
+year_dropdown = tk.OptionMenu(root, year_sort_order, "New - Old", "Old - New") #adds a dropdown with options for the year sorting
+year_dropdown.config(width=buttonwidth)
 year_dropdown.grid(row=3, column=3, padx=10, pady=10)
 year_dropdown.config(bg='black', fg='white')
 year_sort_order.trace_add("write", print_by_year) # Call print_by_year function whenever year_sort_order variable is updated
