@@ -61,17 +61,17 @@ def search(*args):
     fetch_and_print(sql) #this portion of code is probably vulnerable to code injection, although as this code is not being used in a commercial environment, such shenanigans will only delete the database off the user's computer
 
 #functions to show aircraft only from the selected country
-def america():
+def print_america():
     global sql #this makes sql variable created in this function useable everywhere
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 1' #adds the clause showing only planes from a specific country to BASE_SELECT
     fetch_and_print(sql) #runs the fetch_and_print function with the edited sql statement
 
-def russia():
+def print_russia():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 2'
     fetch_and_print(sql)
 
-def france():
+def print_france():
     global sql
     sql = f'{BASE_SELECT}\n WHERE country.country_id = 3'
     fetch_and_print(sql)
@@ -133,15 +133,15 @@ climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 climbbutton.config(bg='black', fg='white')
 
-usabutton = tk.Button(root, text='American', font=(my_font), command = america, width=buttonwidth) #creates a button in root that shows all planes from america
+usabutton = tk.Button(root, text='American', font=(my_font), command = print_america, width=buttonwidth) #creates a button in root that shows all planes from america
 usabutton.grid(row=3, column=0, padx=10, pady=10)
 usabutton.config(bg='black', fg='white')
 
-rusbutton = tk.Button(root, text='Russian', font=(my_font), command = russia, width=buttonwidth) #creates a button in root that shows all planes from russia
+rusbutton = tk.Button(root, text='Russian', font=(my_font), command = print_russia, width=buttonwidth) #creates a button in root that shows all planes from russia
 rusbutton.grid(row=3, column=1, padx=10, pady=10)
 rusbutton.config(bg='black', fg='white')
 
-frabutton = tk.Button(root, text='French', font=(my_font), command = france, width=dropdownwidth) #creates a button in root that shows all planes from france
+frabutton = tk.Button(root, text='French', font=(my_font), command = print_france, width=dropdownwidth) #creates a button in root that shows all planes from france
 frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
