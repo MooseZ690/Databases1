@@ -5,7 +5,7 @@ from PIL import Image, ImageTk #python image library (PIL) lets you control imag
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
 btn_w = 14 #set width of buttons
-dd_width = 10
+dd_width = 10 #set width of dropdown menu
 win_w = 668
 windowheight = 700 #lets the window sizing variables be changed later on
 ac_num = 1 #initialize the ac_num variable, used to show the ranking of planes for the spec chosen
@@ -112,9 +112,9 @@ def print_by_year(*args):#used
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
-root.geometry(f"{win_w}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
+root.geometry(f"{win_w}x{windowheight}") #sizes the window to the height and width variables
 
-year_sort_order = tk.StringVar(value="Year") #This makes the year dropdown say'year' until you do a value - using stringvar because if i want to change it, it updates immediately
+year_sort_order = tk.StringVar(value="Year") #This makes the year dropdown say 'year' until you select a value - using stringvar because if i want to change it, it updates immediately
 
 my_font = ("Helvetica", 10, "bold")
 
