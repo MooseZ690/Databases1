@@ -29,7 +29,7 @@ def fetch_and_print(sql):
     results = cursor.fetchall()
     output_text.configure(state="normal") #makes the text box editable just while inserting results
     output_text.delete(1.0, tk.END)
-    if not results:
+    if not results:#if the results variable is empty, prints no results message
         output_text.insert(tk.END, 'No aircraft match your search terms. ')
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. the variable 'tuple' refers to each tuple in the list
         placement = '[' + str(ac_num) + ']'
