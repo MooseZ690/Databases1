@@ -4,11 +4,11 @@ from PIL import Image, ImageTk #python image library (PIL) lets you control imag
 
 #you need to install pillow through terminal: 'pip install pillow' otherwise the image won't work and probably the rest of the code
 
-buttonwidth = 14 #set width of buttons
-dropdownwidth = 10
-windowwidth = 668
+btn_w = 14 #set width of buttons
+dd_width = 10
+win_w = 668
 windowheight = 700 #lets the window sizing variables be changed later on
-aircraftnumber = 1 #initialize the aircraftnumber variable, used to show the ranking of planes for the spec chosen
+ac_num = 1 #initialize the ac_num variable, used to show the ranking of planes for the spec chosen
 sql = ''  #initialize the sql variable
 results = []  #initialize the results variable as a list
 DATABASE = "aircraft.db"
@@ -22,7 +22,7 @@ BASE_SELECT = """
 
 
 def fetch_and_print(sql):
-    global results, aircraftnumber #makes these variables global so they can be used in the function
+    global results, ac_num #makes these variables global so they can be used in the function
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     cursor.execute(sql)
@@ -32,7 +32,7 @@ def fetch_and_print(sql):
     if not results:
         output_text.insert(tk.END, 'No aircraft match your search terms. ')
     for tuple in results: #results is a list of tuples, which are like lists but unchangeable. the variable 'tuple' refers to each tuple in the list
-        placement = '[' + str(aircraftnumber) + ']'
+        placement = '[' + str(ac_num) + ']'
         output_text.insert(tk.END, f"{placement} {tuple[0]}\n", "bold")
         output_text.insert(tk.END, f"Top speed: {"{:,}".format(tuple[1])}km/h\n") #the format function adds commas to numbers, for readability. 
         output_text.insert(tk.END, f"G Limit: {tuple[2]}Gs\n")
@@ -47,14 +47,15 @@ def fetch_and_print(sql):
 {tuple[5]}. Powered by {tuple[7].lower()}(s), it has a top 
 speed of {"{:,}".format(tuple[1])}km/h, and can climb at {tuple[4]}fpm. 
 The {tuple[0]}'s payload is {"{:,}".format(tuple[3])}lbs, reflected in it's G limit of {tuple[2]}Gs.
+It took it's first flight in {tuple[8]}.
 ''') #formats the results into a more readable sentence. 
         
         output_text.insert(tk.END, "\n" + "━" * 21 + "\n\n")
-        aircraftnumber += 1 #the next aircraft will be one place higher
+        ac_num += 1 #the next aircraft will be one place higher
     output_text.configure(state="disabled") #makes the text box uneditable again
-    aircraftnumber = 1 #resets the variable for the next time this function is called - the next search, sort, etc.
+    ac_num = 1 #resets the variable for the next time this function is called - the next search, sort, etc.
 
-def search(*args):
+def search(*args): #*args is used so I don't have to specify the arguments/number of arguments, for some reason it's needed when calling a function from a keypress (in this case the enter key running the search)
     global sql
     aircraftname = searchbox.get()
     sql = f"{BASE_SELECT}\n WHERE aircraft.aircraft_name LIKE '%{aircraftname}%'" #edits the base select statement to show all planes that names' contain the input
@@ -97,7 +98,7 @@ def print_by_climb_rate():
     sql = f'{BASE_SELECT}\n ORDER BY aircraft.climb_rate_fpm DESC'
     fetch_and_print(sql)
 
-def print_by_year(*args): #apparently used so the function can take more than one input
+def print_by_year(*args):#used
     global sql
     yearorder = year_sort_order.get()
     if yearorder == 'Old - New':
@@ -111,42 +112,42 @@ def print_by_year(*args): #apparently used so the function can take more than on
 root = tk.Tk() #creates a window called root
 root.configure(bg="gray") #sets the background color of the window
 root.title("Aircraft Database (11DTP Project)") #names the window
-root.geometry(f"{windowwidth}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
+root.geometry(f"{win_w}x{windowheight}") #sizes the window, currently just enough to fit the text box sideways
 
-year_sort_order = tk.StringVar(value="Year")
+year_sort_order = tk.StringVar(value="Year") #This makes the year dropdown say'year' until you do a value - using stringvar because if i want to change it, it updates immediately
 
 my_font = ("Helvetica", 10, "bold")
 
-speedbutton = tk.Button(root, text="Sort by Speed", font=(my_font), command = print_by_speed, width=buttonwidth) #creates a button in root that runs print_by_speed
+speedbutton = tk.Button(root, text="Sort by Speed", font=(my_font), command = print_by_speed, width=btn_w) #creates a button in root that runs print_by_speed
 speedbutton.grid(row=2, column=0, padx=10, pady=10)
 speedbutton.config(bg='black', fg='white')
 
-gbutton = tk.Button(root, text="Sort by G Limit", font=(my_font), command = print_by_g_limit, width=buttonwidth) #creates a button in root that runs print_by_g_limit
+gbutton = tk.Button(root, text="Sort by G Limit", font=(my_font), command = print_by_g_limit, width=btn_w) #creates a button in root that runs print_by_g_limit
 gbutton.grid(row=2, column=1, padx=10, pady=10)
 gbutton.config(bg='black', fg='white')
 
-payloadbutton = tk.Button(root, text="Sort by Payload", font=(my_font), command = print_by_payload, width=buttonwidth) #creates a button in root that runs print_by_payload
-payloadbutton.grid(row=2, column=2, padx=10, pady=10)
+payloadbutton = tk.Button(root, text="Sort by Payload", font=(my_font), command = print_by_payload, width=btn_w) #creates a button in root that runs print_by_payload
+payloadbutton.grid(row=2, column=2, padx=10, pady=10)   
 payloadbutton.config(bg='black', fg='white')
 
-climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command = print_by_climb_rate, width=buttonwidth) #creates a button in root that runs print_by_climb_rate
+climbbutton = tk.Button(root, text="Sort by Climb Rate", font=(my_font), command = print_by_climb_rate, width=btn_w) #creates a button in root that runs print_by_climb_rate
 climbbutton.grid(row=2, column=3, padx=10, pady=10)
 climbbutton.config(bg='black', fg='white')
 
-usabutton = tk.Button(root, text='American', font=(my_font), command = print_america, width=buttonwidth) #creates a button in root that shows all planes from america
+usabutton = tk.Button(root, text='American', font=(my_font), command = print_america, width=btn_w) #creates a button in root that shows all planes from america
 usabutton.grid(row=3, column=0, padx=10, pady=10)
 usabutton.config(bg='black', fg='white')
 
-rusbutton = tk.Button(root, text='Russian', font=(my_font), command = print_russia, width=buttonwidth) #creates a button in root that shows all planes from russia
+rusbutton = tk.Button(root, text='Russian', font=(my_font), command = print_russia, width=btn_w) #creates a button in root that shows all planes from russia
 rusbutton.grid(row=3, column=1, padx=10, pady=10)
 rusbutton.config(bg='black', fg='white')
 
-frabutton = tk.Button(root, text='French', font=(my_font), command = print_france, width=dropdownwidth) #creates a button in root that shows all planes from france
+frabutton = tk.Button(root, text='French', font=(my_font), command = print_france, width=dd_width) #creates a button in root that shows all planes from france
 frabutton.grid(row=3, column=2, padx=10, pady=10)
 frabutton.config(bg='black', fg='white')
 
 year_dropdown = tk.OptionMenu(root, year_sort_order, "New - Old", "Old - New") #adds a dropdown with options for the year sorting
-year_dropdown.config(width=buttonwidth)
+year_dropdown.config(width=btn_w)
 year_dropdown.grid(row=3, column=3, padx=10, pady=10)
 year_dropdown.config(bg='black', fg='white')
 year_sort_order.trace_add("write", print_by_year) # Call print_by_year function whenever year_sort_order variable is updated
@@ -154,8 +155,8 @@ year_sort_order.trace_add("write", print_by_year) # Call print_by_year function 
 searchbox = tk.Entry(root) #makes a box to input the name of a specific plane
 searchbox.grid(column=1, row=4, columnspan = 2, padx=10, pady=10)
 searchbox.bind('<Return>', search) #binds the enter key to the search button
-searchbutton = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
-searchbutton.grid(column = 3, row=4, padx=10, pady=10)
+search_btn = tk.Button(root, text='Search/All', command=search, bg='red') #makes a button that runs the search function with the data from the searchbox
+search_btn.grid(column = 3, row=4, padx=10, pady=10)
 
 output_text = tk.Text(root)
 output_text.grid(row=5, column=0, columnspan=4, rowspan=8, padx=10, pady=20) #makes the text box as wide as all the buttons, just below them
